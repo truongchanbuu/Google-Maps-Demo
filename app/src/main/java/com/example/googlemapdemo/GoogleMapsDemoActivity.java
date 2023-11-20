@@ -97,6 +97,8 @@ public class GoogleMapsDemoActivity extends FragmentActivity implements OnMapRea
                 return false;
             }
         });
+
+
     }
     private void getDeviceCurrentLocation() {
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
@@ -113,7 +115,6 @@ public class GoogleMapsDemoActivity extends FragmentActivity implements OnMapRea
                 startLocation = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
                 SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                         .findFragmentById(R.id.map);
-                assert mapFragment != null;
                 mapFragment.getMapAsync(GoogleMapsDemoActivity.this);
             } else {
                 Toast.makeText(GoogleMapsDemoActivity.this, "Current location not available, using default location", Toast.LENGTH_SHORT).show();
@@ -128,13 +129,14 @@ public class GoogleMapsDemoActivity extends FragmentActivity implements OnMapRea
         mMap.setOnMapClickListener(latLng -> {
             mMap.clear();
             destinationLocation = latLng;
+
+            mMap.addMarker(new MarkerOptions().position(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude())));
             mMap.addMarker(new MarkerOptions().position(latLng));
-            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 12));
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 5));
 
             getRoute(startLocation, destinationLocation);
 
         });
-        getDeviceCurrentLocation();
 
         if (currentLocation != null) {
             LatLng here = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
